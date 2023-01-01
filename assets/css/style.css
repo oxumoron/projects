@@ -1,12 +1,4 @@
 /*-----------------------------------*\
-  #style.css
-\*-----------------------------------*/
-
-/**
- * copyright 2022 codewithsadee
- */
-
-/*-----------------------------------*\
   #CUSTOM PROPERTY
 \*-----------------------------------*/
 
@@ -854,12 +846,12 @@ body {
   #MEDIA QUERIES
 \*-----------------------------------*/
 
-/* 
+/*
 * responsive for large than 575px screen
 */
 
 @media (min-width: 575px) {
-  /* 
+  /*
   * REUSED STYLE
   */
 
@@ -869,7 +861,7 @@ body {
     margin-inline: auto;
   }
 
-  /* 
+  /*
   * HEADER
   */
 
@@ -877,7 +869,7 @@ body {
     width: 160px;
   }
 
-  /* 
+  /*
   * UPCOMING
   */
 
@@ -890,7 +882,7 @@ body {
     left: 25%;
   }
 
-  /* 
+  /*
   * FOOTER
   */
 
@@ -899,17 +891,17 @@ body {
   }
 }
 
-/* 
+/*
 * responsive for large than 768px screen
 */
 
 @media (min-width: 768px) {
-  /* 
+  /*
   * CUSTOM PROPERTY
   */
 
   :root {
-    /* 
+    /*
     * TYPOGRAPHY
     */
 
@@ -919,7 +911,7 @@ body {
     --fontSize-2: 3.2rem;
   }
 
-  /* 
+  /*
   * REUSED STYLE
   */
 
@@ -931,7 +923,7 @@ body {
     line-height: 1;
   }
 
-  /* 
+  /*
   * HERO
   */
 
@@ -950,7 +942,7 @@ body {
     z-index: -1;
   }
 
-  /* 
+  /*
   * UPCOMING
   */
 
@@ -979,7 +971,7 @@ body {
     --fontSize-1: 5rem;
   }
 
-  /* 
+  /*
   * NEWS
   */
 
@@ -987,7 +979,7 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 
-  /* 
+  /*
   * CUSTOM CURSOR
   */
 
@@ -1018,17 +1010,17 @@ body {
   }
 }
 
-/* 
+/*
 * responsive for large than 992px screen
 */
 
 @media (min-width: 992px) {
-  /* 
+  /*
   * CUSTOM PROPERTY
   */
 
   :root {
-    /* 
+    /*
     * TYPOGRAPHY
     */
 
@@ -1041,7 +1033,7 @@ body {
     --section-spacing: 100px;
   }
 
-  /* 
+  /*
   * REUSED STYLE
   */
 
@@ -1053,7 +1045,7 @@ body {
     line-height: 1.1;
   }
 
-  /* 
+  /*
   * HEADER
   */
 
@@ -1081,7 +1073,7 @@ body {
     text-align: center;
   }
 
-  /* 
+  /*
   * HERO
   */
 
@@ -1089,7 +1081,7 @@ body {
     transform: scale(1.2);
   }
 
-  /* 
+  /*
   * UPCOMING
   */
 
@@ -1113,7 +1105,7 @@ body {
     left: 50%;
   }
 
-  /* 
+  /*
   * NEWS
   */
 
@@ -1121,7 +1113,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  /* 
+  /*
   * FOOTER
   */
 
@@ -1130,12 +1122,12 @@ body {
   }
 }
 
-/* 
+/*
 * responsive for large than 1200px screen
 */
 
 @media (min-width: 1200px) {
-  /* 
+  /*
   * REUSED STYLE
   */
 
@@ -1147,7 +1139,7 @@ body {
     margin-block-end: 60px;
   }
 
-  /* 
+  /*
   * HERO
   */
 
@@ -1164,7 +1156,7 @@ body {
     margin-inline: auto;
   }
 
-  /* 
+  /*
   * UPCOMING
   */
 
@@ -1185,7 +1177,7 @@ body {
     --fontSize-1: 6.2rem;
   }
 
-  /* 
+  /*
   * FOOTER
   */
 
