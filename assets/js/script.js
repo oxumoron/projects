@@ -1,112 +1,86 @@
-'use strict';
-
 /**
- * add event on multiple elements
+ * add event on element
  */
 
-const addEventOnElements = function (elements, eventType, callback) {
-  for (let i = 0, len = elements.length; i < len; i++) {
-    elements[i].addEventListener(eventType, callback);
+const addEventOnElem = function (elem, type, callback) {
+  if (elem.length > 1) {
+    for (let i = 0; i < elem.length; i++) {
+      elem[i].addEventListener(type, callback);
+    }
+  } else {
+    elem.addEventListener(type, callback);
   }
-}
+};
 
 /**
- * MOBILE NAVBAR
- * navbar will show after clicking menu button 
+ * navbar toggle
  */
 
 const navbar = document.querySelector("[data-navbar]");
+const navbarLinks = document.querySelectorAll("[data-nav-link]");
 const navToggler = document.querySelector("[data-nav-toggler]");
-const navLinks = document.querySelectorAll("[data-nav-link]");
 
-const toggleNav = function () {
+const toggleNavbar = function () {
   navbar.classList.toggle("active");
-  this.classList.toggle("active");
-}
+  navToggler.classList.toggle("active");
+  document.body.classList.toggle("active");
+};
 
-navToggler.addEventListener("click", toggleNav);
+addEventOnElem(navToggler, "click", toggleNavbar);
 
-const navClose = () => {
+const closeNavbar = function () {
   navbar.classList.remove("active");
   navToggler.classList.remove("active");
-}
+  document.body.classList.remove("active");
+};
 
-addEventOnElements(navLinks, "click", navClose);
+addEventOnElem(navbarLinks, "click", closeNavbar);
 
 /**
- * HEADER AND BACK TOP BTN
- * header and back top btn will be active after scrolled down to 100px of screen
+ * header active
  */
 
 const header = document.querySelector("[data-header]");
-const backTopBtn = document.querySelector("[data-back-top-btn]");
 
-const activeEl = function () {
-  if (window.scrollY > 100) {
-    header.classList.add("active");
-    backTopBtn.classList.add("active");
+const activeHeader = function () {
+  if (window.scrollY > 300) {
+    header.classList.add("active")
   } else {
-    header.classList.remove("active");
-    backTopBtn.classList.remove("active");
+    header.classList.remove("active")
   }
 }
 
-window.addEventListener("scroll", activeEl);
+addEventOnElem(window, "scroll", activeHeader);
+
 
 /**
- * Button hover ripple effect
+ * toggle active on add to fav
  */
 
-const buttons = document.querySelectorAll("[data-btn]");
+const addToFavBtns = document.querySelectorAll("[data-add-to-fav]");
 
-const buttonHoverRipple = function (event) {
-  this.style.setProperty("--top", `${event.offsetY}px`);
-  this.style.setProperty("--left", `${event.offsetX}px`);
+const toggleActive = function () {
+  this.classList.toggle("active");
 }
 
-addEventOnElements(buttons, "mousemove", buttonHoverRipple);
-
+addEventOnElem(addToFavBtns, "click", toggleActive);
 
 /**
- * Scroll reveal
+ * scroll reveal effect
  */
 
-const revealElements = document.querySelectorAll("[data-reveal]");
+const sections = document.querySelectorAll("[data-section]");
 
-const revealElementOnScroll = function () {
-  for (let i = 0, len = revealElements.length; i < len; i++) {
-    const isElementInsideWindow = revealElements[i].getBoundingClientRect().top < window.innerHeight / 1.1;
-
-    if (isElementInsideWindow) {
-      revealElements[i].classList.add("revealed");
+const scrollReveal = function () {
+  for (let i = 0; i < sections.length; i++) {
+    if (sections[i].getBoundingClientRect().top < window.innerHeight / 1.5) {
+      sections[i].classList.add("active");
+    } else {
+      sections[i].classList.remove("active");
     }
   }
-}
+};
 
-window.addEventListener("scroll", revealElementOnScroll);
+scrollReveal();
 
-window.addEventListener("load", revealElementOnScroll);
-
-/**
- * Custom cursor
- */
-
-const cursor = document.querySelector("[data-cursor]");
-const hoverElements = [...document.querySelectorAll("a"), ...document.querySelectorAll("button")];
-
-const cursorMove = function (event) {
-  cursor.style.top = `${event.clientY}px`;
-  cursor.style.left = `${event.clientX}px`;
-}
-
-window.addEventListener("mousemove", cursorMove);
-
-addEventOnElements(hoverElements, "mouseover",
-  function () {
-    cursor.classList.add("hovered");
-  });
-
-addEventOnElements(hoverElements, "mouseout",
-  function () {
-    cursor.classList.remove("hovered");
-  });
+addEventOnElem(window, "scroll", scrollReveal);
