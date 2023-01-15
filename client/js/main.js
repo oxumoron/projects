@@ -15,7 +15,7 @@ const getProductAll = () => {
   fetch('http://localhost:3000/products/', {
     method: "GET",
     headers: {
-      // "x-access-token": token,
+      "x-access-token": token,
     }
   }).then(function (response) {
     response.json().then(function (products) {
@@ -26,21 +26,6 @@ const getProductAll = () => {
     });
   }).catch(err => console.error(err));
 }
-// const getProductAll = () => {
-//   fetch('http://localhost:3000/products/', {
-//     method: "GET",
-//     // headers: {
-//     //   "x-access-token": token,
-//     // }
-//   }).then(function (response) {
-//     response.json().then(function (products) {
-//       products.forEach(function (product) {
-//         items.push(product)
-//       });
-//       createCards(items);
-//     });
-//   }).catch(err => console.error(err));
-// }
 
 const searchProducts = () => {
   const searchInput = document.getElementById('search__input');
@@ -120,30 +105,47 @@ const createCards = function (card) {
     newCard.innerHTML = `
               <div class="product">
                   <div class="like">
-                  <img src="img/icons/like_empty.svg" alt="">
+                  <img class="like__img" src="img/icons/like_empty.svg" alt="">
                   </div>
                   <div class="product__photo">
-                    <img class="product__img" id="product__photo" src="${newImage}" height="200" width="200" alt="">
+                    <img class="product__img" src="${newImage}" height="200" width="200" alt="">
                   </div>
                   <div class="product__desc">
-                    <h3 id="product__name" class="product__name">${newName}</h3>
-                    <p class="product__stock"><img id="stock__img" src="${stockImg}" alt=""><span id="product__stock">${newStock}</span> left in stock</p>
-                    <p class="product__price">Price: <span class="price" id="product__price">${newPrice}</span> $</p>
+                    <h3 class="product__name">${newName}</h3>
+                    <p class="product__stock"><img class="stock__img" src="${stockImg}" alt=""><span>${newStock}</span> left in stock</p>
+                    <p class="product__price">Price: <span class="price">${newPrice}</span> $</p>
                     <button id="${newCard.id}" class="btn product__btn" ${newStock ? '' : 'disabled'}>Add to cart</button>
                   </div>
                   <div class="product__footer">
-                    <div class="product__reviews"><span id="product__reviews">${newReviews}</span>% Positive reviews Above aletage
+                    <div class="product__reviews"><span>${newReviews}</span>% Positive reviews Above aletage
                     </div>
-                    <div class="product__orders"><span id="product__orders">${newOrders}</span> orders</div>
+                    <div class="product__orders"><span>${newOrders}</span> orders</div>
                   </div>
                 </div>
     `;
 
     allCards.push(newCard);
+
     newCard.addEventListener('click', (event) => {
       const {
         target
       } = event;
+
+      if (target.parentElement.className === "like") {
+        const like = document.querySelectorAll('.like__img');
+        like.forEach(el => {
+          el.addEventListener('click', (event) => {
+            event.stopPropagation();
+
+            if (!el.classList.contains('filled')) {
+              el.classList.add('filled');
+            } else {
+              el.classList.remove('filled');
+            }
+          })
+        })
+      }
+
       if (target.className === 'btn product__btn') {
         addToCart(newCard);
         checkCounter();
@@ -157,10 +159,6 @@ const createCards = function (card) {
   });
   if (items.length != 0) {
     if (init === false) {
-      // colMemOsFil();
-      // color();
-      // memory();
-      // osystem();
       checkCounter();
 
       init = true;
@@ -168,74 +166,164 @@ const createCards = function (card) {
   }
 }
 
-// createCards(items);
+function checkFilteredInput(inputList) {
+  let arr = [];
 
+  inputList.forEach((input) => {
+    if (input.checked) {
+      arr.push(input)
+    }
+  });
+
+  return arr;
+}
 
 function color() {
   const inputCol = colList.querySelectorAll("input");
+
   for (let input of inputCol) {
-    input.addEventListener('click', () => {
+
+    input.addEventListener('change', () => {
+
       let filteredColor = [];
-      if (input.checked) {
-        items.filter((e) => {
-          if (e.color.indexOf(input.id) > -1) {
-            filteredColor.push(e)
-          }
-        })
-        updateChildren(products, filteredColor);
-      } else {
-        updateChildren(products, items);
+
+      for (let el of checkFilteredInput(inputCol)) {
+
+        if (el.checked) {
+
+          items.filter((e) => {
+
+            if (e.color.indexOf(el.id) > -1) {
+              filteredColor.push(e)
+            }
+
+          })
+
+        }
+
       }
+
+      updateChildren(products, [...new Set(filteredColor)]);
+
     })
+
   }
+
 }
 
 function memory() {
+
   const inputMem = memList.querySelectorAll("input");
+
   for (let input of inputMem) {
-    input.addEventListener('click', () => {
-      // filItems = {};
+
+    input.addEventListener('change', () => {
+
       let filteredMem = [];
-      if (input.checked) {
-        items.filter((e) => {
-          if (e.storage === +input.id) {
-            filteredMem.push(e)
-          }
-        })
-        updateChildren(products, filteredMem);
-        // filItems = {
-        //   ...filteredMem
-        // };
-      } else {
-        updateChildren(products, items);
+
+      for (let el of checkFilteredInput(inputMem)) {
+
+        if (el.checked) {
+
+          items.filter((e) => {
+
+            if (e.storage === +el.id) {
+              filteredMem.push(e)
+            }
+
+          })
+
+        }
+
       }
-      // console.log(memory());
+
+      updateChildren(products, [...new Set(filteredMem)]);
 
     })
   }
-  return filItems;
+
 }
 
-// let fil = [];
+function display() {
 
-function osystem() {
-  const inputOs = osList.querySelectorAll("input");
-  for (let input of inputOs) {
-    input.addEventListener('click', () => {
-      let filteredOs = [];
-      if (input.checked) {
-        // fil.push(input);
-        items.filter((e) => {
-          if (e.os === input.id) {
-            filteredOs.push(e)
-          }
-        })
-        updateChildren(products, filteredOs);
-      } else {
-        updateChildren(products, items);
+  const inputDisplay = disList.querySelectorAll("input");
+
+  for (let input of inputDisplay) {
+
+    input.addEventListener('change', () => {
+
+      let filteredDis = [];
+
+      for (let el of checkFilteredInput(inputDisplay)) {
+
+        if (el.checked) {
+          items.filter((e) => {
+            if (el.id === `inch2_5`) {
+              if (e.display >= 2 && e.display < 5) {
+                filteredDis.push(e)
+              }
+            }
+            if (el.id === `inch_7`) {
+              if (e.display >= 5 && e.display < 7) {
+                filteredDis.push(e)
+              }
+            }
+            if (el.id === `inch7_12`) {
+              if (e.display >= 7 && e.display < 12) {
+                filteredDis.push(e)
+              }
+            }
+            if (el.id === `inch12_16`) {
+              if (e.display >= 12 && e.display < 16) {
+                filteredDis.push(e)
+              }
+            }
+            if (el.id === `more16`) {
+              if (e.display > 16) {
+                filteredDis.push(e)
+              }
+            }
+          })
+        }
+
       }
-      // console.log(new Set(fil));
+
+      updateChildren(products, [...new Set(filteredDis)]);
+
     })
+  }
+
+}
+
+function oSystem() {
+  const inputOs = osList.querySelectorAll("input");
+
+  for (let input of inputOs) {
+
+    input.addEventListener('change', () => {
+
+      let filteredOs = [];
+
+      for (let el of checkFilteredInput(inputOs)) {
+
+        if (el.checked) {
+
+          items.filter((e) => {
+
+            if (e.os === el.id) {
+              filteredOs.push(e)
+            }
+
+          })
+
+        }
+
+        updateChildren(products, filteredOs);
+
+      }
+
+    })
+
   }
 
 }
@@ -260,7 +348,7 @@ const colMemOsFil = () => {
     newCol.classList.add('cat__item');
     newCol.innerHTML = `
           <label class="item__label" for="${elem}">${elem}</label>
-          <input class="item__check" type="checkbox" id="${elem}">
+          <input data-id="${elem}" class="item__check" type="checkbox" id="${elem}">
       `
 
     colList.appendChild(newCol);
@@ -271,7 +359,7 @@ const colMemOsFil = () => {
     newMem.classList.add('cat__item');
     newMem.innerHTML = `
           <label class="item__label" for="${elem}">${elem}</label>
-          <input class="item__check" type="checkbox" id="${elem}">
+          <input data-id="${elem}" class="item__check" type="checkbox" id="${elem}" name="storage-${elem}">
       `
     if (elem != null) {
       memList.appendChild(newMem);
@@ -283,7 +371,7 @@ const colMemOsFil = () => {
     newOs.classList.add('cat__item');
     newOs.innerHTML = `
           <label class="item__label" for="${elem}">${elem}</label>
-          <input class="item__check" type="checkbox" id="${elem}">
+          <input data-id="${elem}" class="item__check" type="checkbox" id="${elem}" name="os-${elem}">
       `
     if (elem != null) {
       osList.appendChild(newOs);
@@ -306,7 +394,6 @@ function addToCart(parentBox) {
   } else {
     cartData[itemId] = [itemTitle, itemPrice, '/' + itemImg.split('/').slice(-4).join('/'), 1];
   }
-
   if (!setCartData(cartData)) {
     return false;
   }
@@ -335,10 +422,7 @@ function addToCartPopup() {
   } else {
     cartData[itemId] = [itemTitle, itemPrice, '/' + itemImg.split('/').slice(-4).join('/'), 1];
   }
-
-  if (!setCartData(cartData)) {
-    // this.disabled = false;
-  }
+  if (!setCartData(cartData)) {}
 }
 
 function openCart() {
@@ -358,10 +442,10 @@ function openCart() {
     allIdInCart.forEach(ar => {
       totalItems += `
           <li id="${ar[0]}" class="cart__item">
-            <img id="item__img" class="item__img" src="${ar[1][2]}" height="100" width="100" alt="">
+            <img class="item__img" src="${ar[1][2]}" height="100" width="100" alt="">
             <div class="item__desc">
-              <h5 id="item__title" class="item__title">${ar[1][0]}</h5>
-              <span id="item__price" class="item__price">${ar[1][1]}</span>
+              <h5 class="item__title">${ar[1][0]}</h5>
+              <span class="item__price">${ar[1][1]} $</span>
             </div>
             <div class="item__buttons">
               <button class="btn__less">
@@ -377,8 +461,8 @@ function openCart() {
     totalItems += `
     </ul>
         <div class="cart__total">
-          <p>Total amount: <span id="cart__amount" class="cart__amount"></span> ptc.</p>
-          <p>Total price: <span id="cart__price" class="cart__price"></span> $</p>
+          <p>Total amount: <span class="cart__amount"></span> ptc.</p>
+          <p>Total price: <span class="cart__price"></span> $</p>
         </div>
         <div class="cart__buy">
           <button class="btn buy__btn">Buy</button>
@@ -399,10 +483,6 @@ function openCart() {
   }
 }
 
-// /////new cart
-let arrayCartItem = [];
-let arrayY = [];
-
 function getCartData() {
   return JSON.parse(localStorage.getItem('cart'));
 }
@@ -412,23 +492,12 @@ function setCartData(o) {
   // return false;
 }
 
-function getTokenData() {
-  return JSON.parse(localStorage.getItem('token'));
-}
-
-function setTokenData(o) {
-  tokens.push(o);
-  localStorage.setItem('token', JSON.stringify(tokens));
-  // return false;
-}
-
 function active() {
   cartCont.classList.add('active');
   tagBody.classList.add('hidden');
 }
 
 cartCont.onmousedown = function (e) {
-  let target = e.target;
   let modalContent = cartCont.getElementsByClassName('cart__inner')[0];
   if (e.target.closest('.' + modalContent.className) === null) {
     this.classList.remove('active');
@@ -438,8 +507,6 @@ cartCont.onmousedown = function (e) {
 
 function popupFunc(array, idCard) {
   array.forEach((item) => {
-    // console.log(item);
-    // item.addEventListener('click', () => {
     popupInner.id = item.id;
     popup.classList.add('modal__active');
     tagBody.classList.add('hidden');
@@ -477,7 +544,6 @@ function popupFunc(array, idCard) {
     });
 
     popup.onmousedown = function (e) {
-      let target = e.target;
       let modalContent = popup.getElementsByClassName('modal__inner')[0];
       if (e.target.closest('.' + modalContent.className) === null) {
         this.classList.remove('modal__active');
@@ -502,53 +568,6 @@ const updateChildren = function (item, children) {
   createCards(childrenArr);
 }
 
-
-
-const inputDisplay = disList.querySelectorAll("input");
-
-for (let input of inputDisplay) {
-  input.addEventListener('click', (event) => {
-    filterDis(input);
-  })
-}
-
-function filterDis(el) {
-  let filteredDis = [];
-  if (el.checked) {
-    items.filter((e) => {
-      if (el.id === `inch2_5`) {
-        if (e.display >= 2 && e.display < 5) {
-          filteredDis.push(e)
-        }
-      }
-      if (el.id === `inch_7`) {
-        if (e.display >= 5 && e.display < 7) {
-          filteredDis.push(e)
-        }
-      }
-      if (el.id === `inch7_12`) {
-        if (e.display >= 7 && e.display < 12) {
-          filteredDis.push(e)
-        }
-      }
-      if (el.id === `inch12_16`) {
-        if (e.display >= 12 && e.display < 16) {
-          filteredDis.push(e)
-        }
-      }
-      if (el.id === `more16`) {
-        if (e.display > 16) {
-          filteredDis.push(e)
-        }
-      }
-      updateChildren(products, filteredDis);
-    })
-  } else {
-    updateChildren(products, items);
-  }
-  return filteredDis;
-}
-
 const inputPrice = priceList.querySelectorAll("input");
 
 for (let input of inputPrice) {
@@ -558,15 +577,15 @@ for (let input of inputPrice) {
     }
   })
 }
-// filteredPrice
+
 function filterPrice() {
-  let itemsSortByPrice = [];
-  itemsSortByPrice = [...sortArrByPrice()];
   const allPrice = items.map(el => el.price);
   const minPrice = Math.min.apply(null, allPrice);
   const maxPrice = Math.max.apply(null, allPrice);
   priceFrom.placeholder = minPrice;
   priceTo.placeholder = maxPrice;
+  let itemsSortByPrice = [];
+  itemsSortByPrice = [...sortArrByPrice()];
   let filteredPrice = [];
   if (priceFrom.value < minPrice) {
     alert('Price value less min value = ' + minPrice)
@@ -577,9 +596,7 @@ function filterPrice() {
   } else {
     itemsSortByPrice.filter((e) => {
       if (priceFrom.value <= e.price && e.price <= priceTo.value) {
-        // console.log(priceFrom.value, e, priceTo.value);
         filteredPrice.push(e);
-
         updateChildren(products, filteredPrice);
       }
     })
@@ -607,7 +624,6 @@ function popupRegister() {
   registrationPopup.classList.add('modal__active');
   tagBody.classList.add('hidden');
   registrationPopup.onmousedown = function (e) {
-    let target = e.target;
     let modalContent = registrationPopup.getElementsByClassName('registration-modal__inner')[0];
     if (e.target.closest('.' + modalContent.className) === null) {
       this.classList.remove('modal__active');
@@ -620,7 +636,6 @@ function popupLogin() {
   loginPopup.classList.add('modal__active');
   tagBody.classList.add('hidden');
   loginPopup.onmousedown = function (e) {
-    let target = e.target;
     let modalContent = loginPopup.getElementsByClassName('login-modal__inner')[0];
     if (e.target.closest('.' + modalContent.className) === null) {
       this.classList.remove('modal__active');
@@ -658,7 +673,6 @@ regBtn.addEventListener('click', async () => {
     email: document.getElementById("email").value,
     password: document.getElementById("password").value,
   };
-  // console.log(user);
   let result = await fetch("http://localhost:3000/api/auth/registration", {
     method: "POST",
     headers: {
@@ -705,6 +719,7 @@ logBtn.addEventListener('click', async () => {
   searchProducts();
   isAuth = true;
   if (isAuth === true) {
+    localStorage.clear()
     cartId.classList.remove('display-none')
     cartId.addEventListener('click', (openCart));
     cartId.addEventListener('click', (active));
@@ -714,13 +729,17 @@ logBtn.addEventListener('click', async () => {
       colMemOsFil();
       color();
       memory();
-      osystem();
+      oSystem();
+      display();
+      const allPrice = items.map(el => el.price);
+      const minPrice = Math.min.apply(null, allPrice);
+      const maxPrice = Math.max.apply(null, allPrice);
+      priceFrom.placeholder = minPrice;
+      priceTo.placeholder = maxPrice;
     });
   }
   if (result.token) {
-    // setTokenData(token);
     // document.cookie = `myToken=${token}; max-age=3600`;
-    // console.log(document.cookie);
     loginPopup.classList.remove('modal__active');
     tagBody.classList.remove('hidden');
   }
@@ -749,9 +768,6 @@ function calcCartPrice() {
 }
 
 document.addEventListener('click', function (event) {
-  // const cartInner = document.querySelector('.cart__item');
-  // const btnMore = cartInner.querySelector('.btn__more');
-  // const btnLess = cartInner.querySelector('.btn__less');
   let counter;
   let count;
   if (event.target.className === 'btn__more' || event.target.className === 'btn__less') {
@@ -760,7 +776,6 @@ document.addEventListener('click', function (event) {
   }
 
   if (event.target.className === 'btn__more') {
-    // btnLess.removeAttribute('disabled', '');
     const el = event.target.closest('.cart__item').id;
     let newData = Object.assign(getCartData());
     Object.entries(newData).forEach((n) => {
@@ -773,8 +788,6 @@ document.addEventListener('click', function (event) {
     });
     counter.innerText = ++counter.innerText;
   } else if (event.target.className === '.cart__items' && parseInt(counter.innerText) === 3) {
-    // event.target.closest('.cart__item').remove();
-    // btnMore.setAttribute('disabled', '')
     return false;
   }
 
@@ -792,9 +805,6 @@ document.addEventListener('click', function (event) {
       });
       counter.innerText = --counter.innerText;
     } else if (event.target.closest('.cart__items') && parseInt(counter.innerText) === 1) {
-      // event.target.closest('.cart__item').remove();
-      // btnLess.setAttribute('disabled', '')
-      // calcCartPrice();
       return false;
     }
   }

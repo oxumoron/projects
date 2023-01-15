@@ -1,14 +1,3 @@
-// export const items = [];
-
-// fetch('http://localhost:3000/api/auth/items').then(function (response) {
-//     response.json().then(function (products) {
-//         products.forEach(function (product) {
-//             items.push(product)
-//         });
-//     });
-//     console.log(items);
-// }).catch(err => console.error(err));
-
 // export const items = [{
 //         id: 1,
 //         category: 'mac',

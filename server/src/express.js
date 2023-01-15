@@ -14,18 +14,16 @@ const verifyToken = require('./middleware/auth.js')
 
 const app = express();
 const host = "localhost";
-const port = 3000;
-// const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // Mongoose
 db
 
-// app.use(cookieParser());
+app.use(cookieParser());
 // verifyToken();
-// app.use((req, res, next) => {
+// app.get('/products/', (req, res) => {
 //   console.log('Cookie: ', req.cookies)
 //   res.send('Get Cookie')
-//   next()
 // })
 app.use(morgan('dev'));
 app.use(cors());
